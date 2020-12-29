@@ -12,4 +12,3 @@ libc = "*"
 nix = "*"
 toml = "*"
 serde = { version = "*", features = ["derive"] }
-anyhow = "*"

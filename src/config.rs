@@ -13,13 +13,19 @@ pub struct BorderConfig {
     pub width: u8,
 }
 
-// impl Config {
-//     pub fn new() -> Result<Self, Box<dyn Error>> {
-//         toml::from_str::<Config>({
-//             let mut file = String::new();
-//             File::open(Path::new(&std::env::var("HOME")?).join(".config/dwmir/config.toml"))?
-//                 .read_to_string(&mut file);
-//             &file[..]
-//         }).
-//     }
-// }
+impl Config {
+    pub fn new() -> Self {
+        let mut file = String::new();
+        toml::from_str::<Config>({
+            File::open(
+                Path::new(&std::env::var("HOME").expect("no HOME found!"))
+                    .join(".config/dwmir/config.toml"),
+            )
+            .expect("unable to open config")
+            .read_to_string(&mut file)
+            .expect("unable to read config.toml");
+            &file[..]
+        })
+        .expect("unable to parse config.toml")
+    }
+}
