@@ -1,0 +1,4 @@
+[border]
+active = [0, 0, 0] 				# out of [65536, 65536, 65536]
+inactive = [256, 256, 256]		# out of [65536, 65536, 65536]
+width = 10 						# in pixels

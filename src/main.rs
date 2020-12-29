@@ -12,6 +12,7 @@ mod border;
 use border::*;
 
 mod config;
+use config::*;
 
 fn become_wm<C: Connection>(conn: &C, screen: &Screen) -> Result<(), ReplyError> {
     let values = ChangeWindowAttributesAux::default().event_mask(
@@ -50,6 +51,10 @@ fn main() {
 
     // become the wm if no other running
     become_wm(&conn, &screen).expect("another window manager running");
+
+    // extract config
+    let config = Config::new();
+    println!("{:?}", config);
 
     // originally the `setup()` function, but all done here as it felt that libraries are already
     // doing most of the stuff
