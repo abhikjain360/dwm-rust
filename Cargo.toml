@@ -10,3 +10,6 @@ edition = "2018"
 x11rb = "*"
 libc = "*"
 nix = "*"
+toml = "*"
+serde = { version = "*", features = ["derive"] }
+anyhow = "*"

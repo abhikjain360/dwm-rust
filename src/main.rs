@@ -8,6 +8,11 @@ use x11rb::{
 mod cursor;
 use cursor::*;
 
+mod border;
+use border::*;
+
+mod config;
+
 fn become_wm<C: Connection>(conn: &C, screen: &Screen) -> Result<(), ReplyError> {
     let values = ChangeWindowAttributesAux::default().event_mask(
         EventMask::SubstructureRedirect | EventMask::SubstructureNotify | EventMask::EnterWindow,
