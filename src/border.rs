@@ -1,12 +1,10 @@
-use std::error::Error;
-
 use x11rb::{connection::Connection, protocol::xproto::*};
 
 use crate::config::*;
 
 pub struct Border {
-    pub active: Colormap,
-    pub inactive: Colormap,
+    pub active: u32,
+    pub inactive: u32,
     pub width: u8,
 }
 
@@ -15,38 +13,33 @@ impl Border {
         conn: &C,
         screen: &Screen,
         config: &Config,
-    ) -> Result<Self, Box<dyn Error>> {
-        // generating ids
-        let active = conn.generate_id()?;
-        let inactive = conn.generate_id()?;
-
-        // creating colormaps
-        conn.create_colormap(ColormapAlloc::All, active, screen.root, screen.root_visual)?;
-        conn.create_colormap(
-            ColormapAlloc::All,
-            inactive,
-            screen.root,
-            screen.root_visual,
-        )?;
-
+    ) -> Self {
         // allocating colors
-        conn.alloc_color(
-            active,
-            config.border.active[0],
-            config.border.active[1],
-            config.border.active[2],
-        )?;
-        conn.alloc_color(
-            inactive,
-            config.border.inactive[0],
-            config.border.inactive[1],
-            config.border.inactive[2],
-        )?;
+        let active = conn
+            .alloc_color(
+                screen.default_colormap,
+                config.border.active[0],
+                config.border.active[1],
+                config.border.active[2],
+            )
+            .expect("default colormap doesn't exist")
+            .reply()
+            .expect("Couldn't get pixel value for border_active color");
+        let inactive = conn
+            .alloc_color(
+                screen.default_colormap,
+                config.border.inactive[0],
+                config.border.inactive[1],
+                config.border.inactive[2],
+            )
+            .expect("default colormap doesn't exist")
+            .reply()
+            .expect("Couldn't get pixel value for border_inactive color");
 
-        Ok(Border {
-            active,
-            inactive,
+        Border {
+            active: active.pixel,
+            inactive: inactive.pixel,
             width: config.border.width,
-        })
+        }
     }
 }
